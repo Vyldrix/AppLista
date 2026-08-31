@@ -2,6 +2,8 @@
 import type { ShoppingItem } from '@/db'
 import { useCategoriesStore } from '@/stores/categories'
 import { IconButton } from '@/components'
+import { getAccessibleTextColor } from '@/utils/colors'
+import { Trash2 } from 'lucide-vue-next'
 
 interface Props {
   categoryId: string
@@ -35,8 +37,8 @@ const categoriesStore = useCategoriesStore()
         {{ categoriesStore.getCategoryDisplay(categoryId) }}
       </h3>
       <span
-        class="text-white px-2 py-1 rounded-full text-sm font-semibold min-w-[24px] text-center"
-        :style="{ backgroundColor: listColor }"
+        class="px-2.5 py-0.5 rounded-full text-sm font-bold min-w-[24px] text-center"
+        :style="{ backgroundColor: listColor, color: getAccessibleTextColor(listColor) }"
       >
         {{ items.length }}
       </span>
@@ -48,7 +50,7 @@ const categoriesStore = useCategoriesStore()
         v-for="item in items"
         :key="item.id"
         class="group flex items-center gap-4 px-6 py-4 border-b border-border last:border-b-0 transition-all duration-200 hover:bg-background max-md:px-4"
-        :class="{ 'opacity-50': item.completed }"
+        :class="{ 'opacity-70': item.completed }"
       >
         <!-- Custom Checkbox -->
         <label class="relative cursor-pointer flex items-center">
@@ -59,10 +61,11 @@ const categoriesStore = useCategoriesStore()
             class="absolute opacity-0 w-0 h-0 peer"
           />
           <span
-            class="w-6 h-6 border-2 border-border rounded-md flex items-center justify-center transition-all duration-200 bg-white hover:scale-110 after:content-['✓'] after:text-white after:font-bold after:opacity-0 peer-checked:after:opacity-100"
+            class="w-6 h-6 border-2 border-gray-400 rounded-md flex items-center justify-center transition-all duration-200 bg-white hover:scale-110 peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2 after:content-['✓'] after:font-bold after:opacity-0 peer-checked:after:opacity-100"
             :style="{
               backgroundColor: item.completed ? listColor : 'white',
-              borderColor: item.completed ? listColor : '',
+              borderColor: item.completed ? listColor : '#9ca3af',
+              color: getAccessibleTextColor(listColor),
             }"
             :class="{ [`hover:border-[${listColor}]`]: !item.completed }"
           ></span>
@@ -107,7 +110,7 @@ const categoriesStore = useCategoriesStore()
         <!-- Delete Button -->
         <IconButton
           variant="danger"
-          icon="🗑️"
+          :icon="Trash2"
           title="Remove item"
           @click="emit('deleteItem', item.id)"
           class="opacity-0 group-hover:opacity-100 max-md:opacity-100"

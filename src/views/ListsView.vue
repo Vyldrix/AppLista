@@ -5,6 +5,7 @@ import { useListsStore } from '@/stores/lists'
 import { useItemsStore } from '@/stores/items'
 import { useShare } from '@/composables/useShare'
 import { useToastNotifications } from '@/composables/useToastNotifications'
+import { Plus, Upload, Settings, ShoppingCart, ChevronDown, ChevronRight } from 'lucide-vue-next'
 import {
   ViewHeader,
   BaseToast,
@@ -58,9 +59,9 @@ const handleDuplicateList = async (id: string) => {
 
 const handleArchiveList = async (id: string) => {
   try {
-    const list = listsStore.getListById(id)
+    const originalList = listsStore.getListById(id)
     await listsStore.archiveList(id)
-    toastStore.showSuccess(`List "${list?.name}" archived successfully!`)
+    toastStore.showSuccess(`Archived "${originalList?.name || 'List'}"`)
   } catch (error) {
     console.error('Failed to archive list:', error)
   }
@@ -68,15 +69,15 @@ const handleArchiveList = async (id: string) => {
 
 const handleUnarchiveList = async (id: string) => {
   try {
-    const list = listsStore.getListById(id)
+    const originalList = listsStore.getListById(id)
     await listsStore.unarchiveList(id)
-    toastStore.showSuccess(`List "${list?.name}" unarchived successfully!`)
+    toastStore.showSuccess(`Restored "${originalList?.name || 'List'}"`)
   } catch (error) {
     console.error('Failed to unarchive list:', error)
   }
 }
 
-const handleDeleteList = async (id: string) => {
+const handleDeleteList = (id: string) => {
   listToDelete.value = id
   showDeleteConfirm.value = true
 }
@@ -87,7 +88,7 @@ const confirmDelete = async () => {
   try {
     const list = listsStore.getListById(listToDelete.value)
     await listsStore.deleteList(listToDelete.value)
-    toastStore.showSuccess(`List "${list?.name}" deleted successfully!`)
+    toastStore.showSuccess(`Deleted "${list?.name || 'List'}"`)
     listToDelete.value = null
   } catch (error) {
     console.error('Failed to delete list:', error)
@@ -149,11 +150,10 @@ const navigateToSettings = () => {
     <ViewHeader title="My Lists" subtitle="Organize your shopping efficiently">
       <template #action>
         <div class="flex gap-2 flex-wrap max-md:flex-col max-md:w-full">
-          <BaseButton @click="showCreateDialog = true" class="max-md:w-full">
-            <span class="text-lg">+</span>
+          <BaseButton :icon="Plus" @click="showCreateDialog = true" class="max-md:w-full">
             New List
           </BaseButton>
-          <BaseButton as="label" variant="secondary" class="max-md:w-full">
+          <BaseButton as="label" :icon="Upload" variant="secondary" class="max-md:w-full">
             <input
               type="file"
               accept=".json"
@@ -161,11 +161,14 @@ const navigateToSettings = () => {
               class="hidden"
               aria-label="Import list from JSON"
             />
-            <span class="text-lg">📥</span>
             Import JSON
           </BaseButton>
-          <BaseButton @click="navigateToSettings" variant="secondary" title="Settings">
-            <span class="text-lg">⚙️</span>
+          <BaseButton
+            :icon="Settings"
+            @click="navigateToSettings"
+            variant="secondary"
+            title="Settings"
+          >
             Settings
           </BaseButton>
         </div>
@@ -202,13 +205,12 @@ const navigateToSettings = () => {
     <!-- Empty State -->
     <EmptyState
       v-else-if="listsStore.activeLists.length === 0"
-      icon="🛒"
+      :icon="ShoppingCart"
       title="No lists yet"
       description="Create your first shopping list to get started!"
     >
       <template #action>
-        <BaseButton @click="showCreateDialog = true">
-          <span class="text-lg">+</span>
+        <BaseButton :icon="Plus" @click="showCreateDialog = true">
           Create Your First List
         </BaseButton>
       </template>
@@ -236,13 +238,18 @@ const navigateToSettings = () => {
     <!-- Archived Lists Section -->
     <div v-if="listsStore.archivedLists.length > 0" class="mt-12 pt-8 border-t-2 border-border">
       <button
-        class="flex items-center gap-2 w-full text-left p-4 rounded-xl transition-all duration-200 text-text-secondary font-semibold hover:bg-background hover:text-text mb-6"
+        class="flex items-center gap-2 w-full text-left p-4 rounded-xl transition-all duration-200 text-text-secondary font-semibold hover:bg-background hover:text-text mb-6 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         @click="showArchived = !showArchived"
+        type="button"
       >
-        <span class="text-sm transition-transform">{{ showArchived ? '▼' : '▶' }}</span>
+        <component
+          :is="showArchived ? ChevronDown : ChevronRight"
+          :size="18"
+          class="text-text-secondary shrink-0"
+        />
         <span class="flex-1">Archived Lists</span>
         <span
-          class="bg-background text-text-secondary px-2 py-1 rounded-full text-sm font-semibold min-w-[24px] text-center"
+          class="bg-gray-200 text-text px-2.5 py-0.5 rounded-full text-sm font-bold min-w-[24px] text-center border border-border"
         >
           {{ listsStore.archivedLists.length }}
         </span>

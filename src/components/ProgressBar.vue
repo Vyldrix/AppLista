@@ -27,15 +27,22 @@ const colorClasses = {
 </script>
 
 <template>
-  <div class="w-full">
+  <div
+    class="w-full"
+    role="progressbar"
+    :aria-valuenow="value"
+    aria-valuemin="0"
+    :aria-valuemax="max"
+    :aria-label="`Progress: ${Math.round(percentage)}%`"
+  >
     <div
       v-if="showLabel"
-      class="flex justify-between items-center mb-2 text-sm text-text-secondary"
+      class="flex justify-between items-center mb-2 text-sm font-medium text-text-secondary"
     >
       <slot name="label" />
-      <span>{{ Math.round(percentage) }}%</span>
+      <span class="font-semibold text-text">{{ Math.round(percentage) }}%</span>
     </div>
-    <div class="h-2 bg-background rounded-full overflow-hidden">
+    <div class="h-2.5 bg-gray-200 rounded-full overflow-hidden border border-border/50">
       <div
         :class="['h-full rounded-full transition-all duration-500', colorClasses[color]]"
         :style="{ width: `${percentage}%` }"

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { Component } from 'vue'
+
 interface Props {
   variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'icon'
   size?: 'sm' | 'md' | 'lg'
@@ -6,7 +8,7 @@ interface Props {
   fullWidth?: boolean
   type?: 'button' | 'submit' | 'reset'
   as?: 'button' | 'label'
-  icon?: string
+  icon?: Component | string
   title?: string
 }
 
@@ -36,6 +38,12 @@ const sizeClasses = {
   md: 'px-6 py-3 text-base',
   lg: 'px-8 py-4 text-lg',
 }
+
+const iconPixelSizes = {
+  sm: 16,
+  md: 18,
+  lg: 22,
+}
 </script>
 
 <template>
@@ -45,7 +53,7 @@ const sizeClasses = {
     :disabled="disabled"
     :title="title"
     :class="[
-      'inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-200 whitespace-nowrap cursor-pointer',
+      'inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-200 whitespace-nowrap cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2',
       variantClasses[variant],
       variant === 'icon' ? 'text-xl' : sizeClasses[size],
       {
@@ -54,7 +62,13 @@ const sizeClasses = {
       },
     ]"
   >
-    <span v-if="icon">{{ icon }}</span>
+    <component
+      :is="icon"
+      v-if="typeof icon === 'object' || typeof icon === 'function'"
+      :size="iconPixelSizes[size]"
+      class="shrink-0"
+    />
+    <span v-else-if="icon">{{ icon }}</span>
     <slot />
   </component>
 </template>
