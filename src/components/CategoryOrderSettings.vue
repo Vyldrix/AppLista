@@ -2,6 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useCategoriesStore } from '@/stores/categories'
 import { BaseButton } from '@/components'
+import { ChevronUp, ChevronDown } from 'lucide-vue-next'
 
 const categoriesStore = useCategoriesStore()
 
@@ -92,46 +93,20 @@ const resetOrder = async () => {
             <button
               @click="moveUp(index)"
               :disabled="index === 0"
-              class="p-1.5 rounded bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors shadow-sm"
+              class="p-1.5 rounded bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors shadow-sm cursor-pointer"
               :title="`Move ${category.name} up`"
               :aria-label="`Move ${category.name} up`"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 15l7-7 7 7"
-                />
-              </svg>
+              <ChevronUp :size="18" />
             </button>
             <button
               @click="moveDown(index)"
               :disabled="index === localCategories.length - 1"
-              class="p-1.5 rounded bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors shadow-sm"
+              class="p-1.5 rounded bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors shadow-sm cursor-pointer"
               :title="`Move ${category.name} down`"
               :aria-label="`Move ${category.name} down`"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
+              <ChevronDown :size="18" />
             </button>
           </div>
 

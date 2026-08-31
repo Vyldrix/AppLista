@@ -115,3 +115,62 @@ export function darkenColor(hex: string, amount: number = 15): string {
  * Default list color (primary green)
  */
 export const DEFAULT_LIST_COLOR = '#10b981'
+
+/**
+ * Normalizes hex string (handles 3-digit and 6-digit hex)
+ */
+function normalizeHex(hex: string): string {
+  const cleanHex = hex.replace('#', '')
+  if (cleanHex.length === 3) {
+    return cleanHex
+      .split('')
+      .map((c) => c + c)
+      .join('')
+  }
+  return cleanHex
+}
+
+/**
+ * Calculates WCAG 2.1 relative luminance for a given hex color
+ */
+export function getRelativeLuminance(hex: string): number {
+  const normalized = normalizeHex(hex)
+  const rgb = hexToRgb(`#${normalized}`)
+  if (!rgb) return 0
+
+  const srgb = [rgb.r / 255, rgb.g / 255, rgb.b / 255].map((val) => {
+    return val <= 0.04045 ? val / 12.92 : Math.pow((val + 0.055) / 1.055, 2.4)
+  })
+
+  return 0.2126 * srgb[0]! + 0.7152 * srgb[1]! + 0.0722 * srgb[2]!
+}
+
+/**
+ * Calculates WCAG 2.1 contrast ratio between two hex colors (1:1 to 21:1)
+ */
+export function getContrastRatio(hex1: string, hex2: string): number {
+  const lum1 = getRelativeLuminance(hex1)
+  const lum2 = getRelativeLuminance(hex2)
+
+  const lighter = Math.max(lum1, lum2)
+  const darker = Math.min(lum1, lum2)
+
+  return (lighter + 0.05) / (darker + 0.05)
+}
+
+/**
+ * Determines whether a color is perceived as dark (for choosing contrasting text/overlays)
+ */
+export function isColorDark(hex: string): boolean {
+  return getRelativeLuminance(hex) < 0.35
+}
+
+/**
+ * Returns an accessible text color (#ffffff or #111827) for a given background color
+ */
+export function getAccessibleTextColor(bgHex: string): string {
+  const whiteContrast = getContrastRatio('#ffffff', bgHex)
+  const darkContrast = getContrastRatio('#111827', bgHex)
+
+  return whiteContrast >= darkContrast ? '#ffffff' : '#111827'
+}

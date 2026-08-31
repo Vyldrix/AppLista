@@ -12,6 +12,16 @@ import { useShare } from '@/composables/useShare'
 import { darkenColor, DEFAULT_LIST_COLOR } from '@/utils/colors'
 import type { ScanResult } from '@/composables/useBarcodeScanner'
 import {
+  Pencil,
+  Mic,
+  ScanLine,
+  Share2,
+  Download,
+  Trash2,
+  Plus,
+  ClipboardList,
+} from 'lucide-vue-next'
+import {
   BackButton,
   BaseCard,
   BaseInput,
@@ -364,7 +374,7 @@ const handleExport = () => {
         <h1 class="text-3xl md:text-4xl font-bold text-white flex-1 wrap-break-word">
           {{ list.name }}
         </h1>
-        <IconButton variant="icon" icon="✏️" title="Edit list name" @click="startRenaming" />
+        <IconButton variant="icon" :icon="Pencil" title="Edit list name" @click="startRenaming" />
       </div>
 
       <div v-else class="mb-6">
@@ -412,17 +422,19 @@ const handleExport = () => {
         <div class="flex justify-around gap-4">
           <div class="flex flex-col items-center gap-1">
             <span class="text-3xl font-bold text-white leading-none">{{ totalCount }}</span>
-            <span class="text-sm text-white/90 uppercase tracking-wide">Total</span>
+            <span class="text-sm text-white/90 uppercase tracking-wide font-semibold">Total</span>
           </div>
           <div class="flex flex-col items-center gap-1">
             <span class="text-3xl font-bold text-white leading-none">{{ completedCount }}</span>
-            <span class="text-sm text-white/90 uppercase tracking-wide">Done</span>
+            <span class="text-sm text-white/90 uppercase tracking-wide font-semibold">Done</span>
           </div>
           <div class="flex flex-col items-center gap-1">
             <span class="text-3xl font-bold text-white leading-none"
               >{{ progressPercentage }}%</span
             >
-            <span class="text-sm text-white/90 uppercase tracking-wide">Complete</span>
+            <span class="text-sm text-white/90 uppercase tracking-wide font-semibold"
+              >Complete</span
+            >
           </div>
         </div>
         <div
@@ -453,25 +465,26 @@ const handleExport = () => {
           <div class="flex gap-2 max-md:flex-1">
             <BaseButton
               @click="showVoice = true"
+              :icon="Mic"
               variant="secondary"
               class="whitespace-nowrap max-md:flex-1"
               title="Voice input"
             >
-              <span class="text-lg">🎤</span>
               Voice
             </BaseButton>
             <BaseButton
               @click="showScanner = true"
+              :icon="ScanLine"
               variant="secondary"
               class="whitespace-nowrap max-md:flex-1"
               title="Scan barcode"
             >
-              <span class="text-lg">📷</span>
               Scan
             </BaseButton>
           </div>
           <BaseButton
             @click="handleQuickAdd"
+            :icon="Plus"
             :disabled="!quickAddInput.trim()"
             class="whitespace-nowrap max-md:flex-1"
             :style="{
@@ -486,12 +499,20 @@ const handleExport = () => {
 
     <!-- Share and Export Actions -->
     <div class="mb-6 flex gap-2 flex-wrap max-sm:justify-between">
-      <BaseButton variant="secondary" @click="handleShare" class="flex items-center gap-2">
-        <span class="text-lg">📤</span>
+      <BaseButton
+        :icon="Share2"
+        variant="secondary"
+        @click="handleShare"
+        class="flex items-center gap-2"
+      >
         Share List
       </BaseButton>
-      <BaseButton variant="secondary" @click="handleExport" class="flex items-center gap-2">
-        <span class="text-lg">💾</span>
+      <BaseButton
+        :icon="Download"
+        variant="secondary"
+        @click="handleExport"
+        class="flex items-center gap-2"
+      >
         Export JSON
       </BaseButton>
     </div>
@@ -507,8 +528,7 @@ const handleExport = () => {
 
     <!-- Clear Completed Button -->
     <div v-if="completedCount > 0" class="mb-6 flex justify-end">
-      <BaseButton variant="danger" @click="handleRemoveCompleted">
-        <span class="text-lg">🗑️</span>
+      <BaseButton :icon="Trash2" variant="danger" @click="handleRemoveCompleted">
         Clear Completed ({{ completedCount }})
       </BaseButton>
     </div>
@@ -530,7 +550,7 @@ const handleExport = () => {
     <!-- Empty State -->
     <EmptyState
       v-if="totalCount === 0"
-      icon="📝"
+      :icon="ClipboardList"
       title="Start your shopping list"
       description="Add items using the quick add box above. You can add multiple items at once!"
     />

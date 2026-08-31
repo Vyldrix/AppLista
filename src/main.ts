@@ -6,15 +6,14 @@ import { registerSW } from 'virtual:pwa-register'
 import App from './App.vue'
 import router from './router'
 
-// Store the update function for potential future use
-registerSW({
+// Auto-update Service Worker immediately on changes in dev/prod
+const updateSW = registerSW({
+  immediate: true,
   onNeedRefresh() {
-    console.log('New content available, please refresh.')
-    // Could show a toast notification here
+    updateSW(true)
   },
   onOfflineReady() {
     console.log('App ready to work offline')
-    // Could show a toast notification here
   },
 })
 

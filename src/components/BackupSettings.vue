@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { BaseCard, BaseButton, ConfirmDialog } from '@/components'
 import { useBackup } from '@/composables/useBackup'
 import { useToastNotifications } from '@/composables/useToastNotifications'
+import { Database, Download, Upload } from 'lucide-vue-next'
 
 const { downloadBackup, importBackupFromFile } = useBackup()
 const toastStore = useToastNotifications()
@@ -77,35 +78,44 @@ const handleConfirmImport = async () => {
 
 <template>
   <BaseCard class="p-6">
-    <h2 class="text-2xl font-bold text-gray-900 mb-4">💾 Backup & Restore</h2>
-    <p class="text-gray-600 mb-6">
+    <div class="flex items-center gap-2.5 mb-4">
+      <Database :size="24" class="text-primary" />
+      <h2 class="text-2xl font-bold text-text">Backup & Restore</h2>
+    </div>
+    <p class="text-text-secondary mb-6 font-medium">
       Export your lists, items, and settings to a backup file. You can restore this backup later if
       you need to recover your data.
     </p>
 
     <div class="space-y-4">
       <!-- Export Backup -->
-      <div class="flex items-start gap-4">
+      <div class="flex items-start gap-4 max-sm:flex-col">
         <div class="flex-1">
-          <h3 class="font-semibold text-gray-900 mb-1">Export Backup</h3>
-          <p class="text-sm text-gray-600">
+          <h3 class="font-semibold text-text mb-1">Export Backup</h3>
+          <p class="text-sm text-text-secondary">
             Download all your data as a JSON file. This includes all lists, items, custom
             categories, products, and preferences.
           </p>
         </div>
-        <BaseButton @click="handleExportBackup" :disabled="exporting" variant="secondary">
-          <span v-if="!exporting">📥 Export</span>
-          <span v-else>⏳ Exporting...</span>
+        <BaseButton
+          @click="handleExportBackup"
+          :disabled="exporting"
+          :icon="Download"
+          variant="secondary"
+          class="whitespace-nowrap"
+        >
+          <span v-if="!exporting">Export</span>
+          <span v-else>Exporting...</span>
         </BaseButton>
       </div>
 
-      <div class="border-t border-gray-200"></div>
+      <div class="border-t border-border"></div>
 
       <!-- Import Backup -->
-      <div class="flex items-start gap-4">
+      <div class="flex items-start gap-4 max-sm:flex-col">
         <div class="flex-1">
-          <h3 class="font-semibold text-gray-900 mb-1">Import Backup</h3>
-          <p class="text-sm text-gray-600">
+          <h3 class="font-semibold text-text mb-1">Import Backup</h3>
+          <p class="text-sm text-text-secondary">
             Restore data from a backup file. This will replace all your current data with the backup
             contents.
           </p>
@@ -118,9 +128,15 @@ const handleConfirmImport = async () => {
             @change="handleFileSelect"
             class="hidden"
           />
-          <BaseButton @click="triggerFileInput" :disabled="importing" variant="secondary">
-            <span v-if="!importing">📤 Import</span>
-            <span v-else>⏳ Importing...</span>
+          <BaseButton
+            @click="triggerFileInput"
+            :disabled="importing"
+            :icon="Upload"
+            variant="secondary"
+            class="whitespace-nowrap"
+          >
+            <span v-if="!importing">Import</span>
+            <span v-else>Importing...</span>
           </BaseButton>
         </div>
       </div>
