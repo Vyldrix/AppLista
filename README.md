@@ -371,6 +371,6 @@ El resultado listo para producción se genera en la carpeta `dist/`, configurado
 > Actualmente, la evolución, desarrollo continuo, mejoras de accesibilidad, modernización de componentes y mantenimiento de este proyecto están siendo llevados a cabo por:
 >
 > - **Loyola Lautaro** ([@Vyldrix](https://github.com/Vyldrix))
-> - **Cristian Sasinka**
+> - **Cristian Sasinka** ([@ssnkcode](https://github.com/ssnkcode))
 >
 > _Proyecto desarrollado y adaptado en el marco de la materia **Programación Extrema y Testing** (Segundo Año)._
